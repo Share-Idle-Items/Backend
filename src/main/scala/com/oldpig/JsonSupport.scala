@@ -14,9 +14,9 @@ trait JsonSupport extends SprayJsonSupport {
 
 	implicit val userInfoFormat = jsonFormat7(UserInfo)
 	implicit val idForamt = jsonFormat1(Id)
-//	implicit val registerInfoFormat = jsonFormat5(RegisterInfo)
+	implicit val registerInfoFormat = jsonFormat8(RegisterInfo)
 	implicit val patchResultFormat = jsonFormat1(PatchResult)
-	implicit val userPatchInfoFormat= jsonFormat4(UserPatchInfo)
+	implicit val userPatchInfoFormat= jsonFormat5(UserPatchInfo)
 	implicit val loginInfoFormat = jsonFormat2(LoginInfo)
 	implicit val orderInfoFormat = jsonFormat5(OrderInfo)
 	implicit val orderDeleteInfoFormat = jsonFormat4(OrderDeleteInfo)

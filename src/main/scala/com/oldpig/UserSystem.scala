@@ -12,13 +12,14 @@ import scala.concurrent.duration.{Duration, _}
 final case class UserInfo(username: String, real_name: String, front_id: String,
 						  phone: String, id_card: String, image: String, credit: Int)
 
-//final case class RegisterInfo(front_id: String, username: String, real_name: String,
-//							  password: String, email: String)
+final case class RegisterInfo(username: String, real_name: String, front_id: String,
+							  phone: String, id_card: String, image: String, credit: Int,
+							  password: String)
 
 final case class Id(id: String)
 
-final case class UserPatchInfo(front_id: String, real_name: String, password: String,
-							   email: String)
+final case class UserPatchInfo(front_id: String, phone: String, image: String, credit: Int,
+							   password: String)
 
 final case class LoginInfo(username: String, password: String)
 
@@ -27,8 +28,7 @@ object UserSystem {
 
 	def props = Props[UserSystem]
 
-//	final case class RegisterUser(registerInfo: RegisterInfo)
-final case class RegisterUser(userInfo: UserInfo)
+	final case class RegisterUser(registerInfo: RegisterInfo)
 
 	final case class GetUserInfo(front_id: String)
 
@@ -49,8 +49,8 @@ class UserSystem extends Actor with ActorLogging {
 			sender() ! getUserInfo(id)
 		case RegisterUser(r) =>
 			sender() ! registerUser(r)
-		case UserPatchInfo(id, r, p, e) =>
-			sender() ! userPatchInfo(id, r, p, e)
+		case UserPatchInfo(id, phone, image, credit, pw) =>
+			sender() ! userPatchInfo(id, phone, image, credit, pw)
 		case DeleteUser(id) =>
 			sender() ! deleteUser(id)
 		case Login(loginInfo) =>
@@ -70,12 +70,13 @@ class UserSystem extends Actor with ActorLogging {
 		}
 	}
 
-	def userPatchInfo(id: String, r: String, p: String, e: String): PatchResult = {
+	def userPatchInfo(id: String, phone: String, image: String, credit: Int, pw: String): PatchResult = {
 		val query = MongoDBObject("front_id" -> id)
-		val upd = MongoDBObject(
-			"username" -> r,
-			"password" -> p,
-			"email" -> e
+		val upd = $set(
+			"phone" -> phone,
+			"password" -> pw,
+			"credit" -> credit,
+			"image" -> image
 		)
 		val f1 = (dbSystem ? DBSystem.Update("user", query, upd)).mapTo[String]
 		PatchResult(Await.result(f1, Duration.Inf))
@@ -101,9 +102,10 @@ class UserSystem extends Actor with ActorLogging {
 		}
 	}
 
-	def registerUser(r: UserInfo): UserInfo = {
+	def registerUser(r: RegisterInfo): UserInfo = {
 		val content = MongoDBObject(
 			"username" -> r.username,
+			"password" -> r.password,
 			"real_name" -> r.real_name,
 			"front_id" -> r.front_id,
 			"phone" -> r.front_id,
@@ -112,7 +114,7 @@ class UserSystem extends Actor with ActorLogging {
 			"credit" -> r.credit
 		)
 		val f1 = (dbSystem ? DBSystem.Insert("user", content)).mapTo[String]
-		r
+		UserInfo(r.username, r.real_name, r.front_id, r.phone, r.id_card, r.image, r.credit)
 	}
 
 }
