@@ -1,6 +1,11 @@
 package com.oldpig
 
 import akka.actor.{Actor, ActorLogging, Props}
+import akka.pattern.ask
+import akka.util.Timeout
+
+import scala.concurrent.Await
+import scala.concurrent.duration.{Duration, _}
 
 final case class Location(province: String, city: String, region: String)
 
@@ -17,7 +22,7 @@ object SearchSystem {
 }
 
 class SearchSystem extends Actor with ActorLogging {
-
+	lazy val dbSystem = context.actorSelection("../dbSystemActor")
 	import SearchSystem._
 
 	override def receive: Receive = {

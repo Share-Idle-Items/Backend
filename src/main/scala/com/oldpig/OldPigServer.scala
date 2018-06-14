@@ -1,14 +1,13 @@
 package com.oldpig
 
 //#quick-start-server
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
-import akka.http.scaladsl.server.Directives._
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 //#main-class
 object OldPigServer extends App with OldPigRoutes {
@@ -19,19 +18,20 @@ object OldPigServer extends App with OldPigRoutes {
 	implicit val system: ActorSystem = ActorSystem("oldPigServer")
 	implicit val materializer: ActorMaterializer = ActorMaterializer()
 	//#server-bootstrapping
+	//	route
+	lazy val routes: Route = oldPigRoutes
 
-//	val userRegistryActor: ActorRef = system.actorOf(UserRegistryActor.props, "userRegistryActor")
+	//	db connection
 
+	//	val userRegistryActor: ActorRef = system.actorOf(UserRegistryActor.props, "userRegistryActor")
+	val dbSystem = system.actorOf(DBSystem.props, "dbSystemActor")
 	val userSystem = system.actorOf(UserSystem.props, "userSystemActor")
 	val itemSystem = system.actorOf(ItemSystem.props, "itemSystemActor")
 	val orderSystem = system.actorOf(OrderSystem.props, "orderSystemActor")
 	val fundSystem = system.actorOf(FundSystem.props, "fundSystemActor")
 	val chatSystem = system.actorOf(ChatSystem.props, "chatSystemActor")
 	val searchSystem = system.actorOf(SearchSystem.props, "searchSystemActor")
-	//#main-class
-	// from the UserRoutes trait
-//	lazy val routes: Route = oldPigRoutes
-	lazy val routes: Route = oldPigRoutes
+
 	//#main-class
 
 	//#http-server

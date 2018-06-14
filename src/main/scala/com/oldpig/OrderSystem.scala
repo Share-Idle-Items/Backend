@@ -1,19 +1,24 @@
 package com.oldpig
 
 import akka.actor.{Actor, ActorLogging, Props}
+import akka.pattern.ask
+import akka.util.Timeout
 
-final case class OrderInfo(borrower: Int, lender: Int, item: Int, start: Int,
-						   end: Int, price: Double)
+import scala.concurrent.Await
+import scala.concurrent.duration.{Duration, _}
 
-final case class OrderDeleteInfo(id: Int, user: Int, reason: String,
+final case class OrderInfo(borrower: Int, lender: Int, item: Int, time: Int,
+						   status: Int)
+
+final case class OrderDeleteInfo(front_id: Int, user: Int, reason: String,
 								 time: Int)
 
 final case class OrderQueryInfo(user: Int, startTime: Int, endTime: Int,
 								role: Int, state: Int)
 
-final case class OrderQueryResult(id: Int, borrower: Int, lender: Int,
+final case class OrderQueryResult(front_id: Int, borrower: Int, lender: Int,
 								  item: Int, start: Int, end: Int,
-								  state: Int, price: Double)
+								  status: Int)
 
 final case class OrderQueryResults(list: List[OrderQueryResult])
 
@@ -34,6 +39,8 @@ class OrderSystem extends Actor with ActorLogging {
 
 	import OrderSystem._
 
+	lazy val dbSystem = context.actorSelection("../dbSystemActor")
+
 	override def receive: Receive = {
 		case CreateOrder(o) =>
 			sender() ! createOrder(o)
@@ -46,12 +53,12 @@ class OrderSystem extends Actor with ActorLogging {
 	}
 
 	def orderQuery(orderQueryInfo: OrderQueryInfo): OrderQueryResults = {
-		OrderQueryResults(List(OrderQueryResult(1, 1, 1, 1, 1, 1, 1, 2),
-			OrderQueryResult(1, 1, 1, 1, 1, 1, 1, 2)))
+		OrderQueryResults(List(OrderQueryResult(1, 1, 1, 1, 1, 1, 1),
+			OrderQueryResult(1, 1, 1, 1, 1, 1, 1)))
 	}
 
 	def cancelOrder(orderDeleteInfo: OrderDeleteInfo): PatchResult = {
-		PatchResult("succeed deleting order:" + orderDeleteInfo.id)
+		PatchResult("succeed deleting order:" + orderDeleteInfo.front_id)
 	}
 
 	def createOrder(o: OrderInfo): PatchResult = {
