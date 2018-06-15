@@ -30,6 +30,8 @@ object ItemSystem {
 
 	case class DeleteItem(itemDeleteInfo: ItemDeleteInfo)
 
+	case class GetItemInfo(front_id: String)
+
 }
 
 class ItemSystem extends Actor with ActorLogging {
@@ -45,6 +47,38 @@ class ItemSystem extends Actor with ActorLogging {
 			sender() ! patchItem(item)
 		case DeleteItem(deleteInfo) =>
 			sender() ! deleteItem(deleteInfo)
+		case GetItemInfo(front_id) =>
+			sender() ! getItemInfo(front_id)
+	}
+
+	def getItemInfo(front_id: String): Item = {
+		val query = MongoDBObject("front_id" -> front_id)
+		val f1 = (dbSystem ? DBSystem.Query("item", query)).mapTo[Array[DBObject]]
+		val result = Await.result(f1, Duration.Inf)
+		if (result.isEmpty) Item("null", "null", "null", "null", 0, 0, List("null"),
+			0, 0, 0, Location("null", "null", "null"), "null")
+		else {
+			val item = result(0)
+			val locList = (List() ++ item("location").asInstanceOf[BasicDBList]) map {
+				_.asInstanceOf[String]
+			}
+			Item(
+				item("front_id").toString,
+				item.get("name").toString,
+				item.get("description").toString,
+				item.get("user").toString,
+				item.get("price").toString.toDouble,
+				item.get("deposit").toString.toDouble,
+				(List() ++ item("image").asInstanceOf[BasicDBList]) map {
+					_.asInstanceOf[String]
+				},
+				item.get("startTime").toString.toInt,
+				item.get("endTime").toString.toInt,
+				item.get("transfer").toString.toInt,
+				Location(locList(0), locList(1), locList(2)),
+				item.get("category").toString
+			)
+		}
 	}
 
 	def createItem(i: Item): PatchResult = {

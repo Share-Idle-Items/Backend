@@ -206,6 +206,13 @@ trait OldPigRoutes extends JsonSupport {
 							val item = (itemSystem ? DeleteItem(it)).mapTo[PatchResult]
 							complete(item)
 					}
+				},
+				path(Segment) {
+					st =>
+						get {
+							val itemInfo = (itemSystem ? ItemSystem.GetItemInfo(st)).mapTo[Item]
+							complete(itemInfo)
+						}
 				}
 			)
 		}
