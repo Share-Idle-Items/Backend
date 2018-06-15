@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorLogging, Props}
 import com.mongodb.casbah.commons.MongoDBObject
 import com.mongodb.casbah.query.Imports._
 import com.mongodb.casbah.{Cursor, MongoClient, MongoDB}
+import akka.util.Timeout
 
 import scala.language.reflectiveCalls
 
@@ -36,7 +37,7 @@ class DBSystem extends Actor with ActorLogging {
 //	coll.insert(a)
 //	coll.insert(b)
 //	coll.insert(MongoDBObject("k1" -> "v1", "k2" -> 3))
-//	for (i <- coll.find.toArray) println(i.get("k2"))
+//	for (i <- coll.find.toArray) println(i)
 //	println("=====")
 //	val result = coll.remove(MongoDBObject("k1" -> "v1"))
 //	println(result.getN)

@@ -114,6 +114,8 @@ class UserSystem extends Actor with ActorLogging {
 			"credit" -> r.credit
 		)
 		val f1 = (dbSystem ? DBSystem.Insert("user", content)).mapTo[String]
+		val fundContent = MongoDBObject("user" -> r.front_id, "balance" -> 0)
+		val f2 = (dbSystem ? DBSystem.Insert("fund", fundContent)).mapTo[String]
 		UserInfo(r.username, r.real_name, r.front_id, r.phone, r.id_card, r.image, r.credit)
 	}
 
