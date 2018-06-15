@@ -9,11 +9,15 @@ import com.mongodb.casbah.query.Imports._
 import scala.concurrent.Await
 import scala.concurrent.duration.{Duration, _}
 
-final case class Item(front_id: String, name: String, description: String, user: String, price: Double, deposit: Double,
-					  image: List[String], availableTime: Int, transfer: Int)
+final case class Location(province: String, city: String, region: String)
 
-final case class ItemPostInfo(name: String, description: String, user: String, price: Double, deposit: Double,
-							  image: List[String], availableTime: Int, transfer: Int)
+final case class Item(front_id: String, name: String, description: String, user: String, price: Double,
+					  deposit: Double, image: List[String], startTime: Int, endTime: Int, transfer: Int,
+					  location: Location, category: String)
+
+//final case class ItemPostInfo(name: String, description: String, user: String, price: Double, deposit: Double,
+//							  image: List[String], startTime: Int, availableTime: Int, transfer: Int,
+//							  location: Location)
 
 final case class ItemDeleteInfo(front_id: String)
 
@@ -52,8 +56,11 @@ class ItemSystem extends Actor with ActorLogging {
 			"price" -> i.price,
 			"deposit" -> i.deposit,
 			"image" -> i.image,
-			"availableTime" -> i.availableTime,
-			"transfer" -> i.transfer
+			"startTime" -> i.startTime,
+			"endTime" -> i.endTime,
+			"transfer" -> i.transfer,
+			"location" -> i.location,
+			"category" -> i.category
 		)
 		val f1 = (dbSystem ? DBSystem.Insert("item", content)).mapTo[String]
 		PatchResult(Await.result(f1, Duration.Inf))
@@ -68,14 +75,17 @@ class ItemSystem extends Actor with ActorLogging {
 			"price" -> i.price,
 			"deposit" -> i.deposit,
 			"image" -> i.image,
-			"availableTime" -> i.availableTime,
-			"transfer" -> i.transfer
+			"startTime" -> i.startTime,
+			"endTime" -> i.endTime,
+			"transfer" -> i.transfer,
+			"location" -> i.location,
+			"category" -> i.category
 		)
 		val f1 = (dbSystem ? DBSystem.Update("item", query, content)).mapTo[String]
 		PatchResult(Await.result(f1, Duration.Inf))
 	}
 
-	def deleteItem(info : ItemDeleteInfo): PatchResult = {
+	def deleteItem(info: ItemDeleteInfo): PatchResult = {
 		val query = MongoDBObject("front_id" -> info.front_id)
 		val f1 = (dbSystem ? DBSystem.Delete("item", query)).mapTo[String]
 		PatchResult(Await.result(f1, Duration.Inf))

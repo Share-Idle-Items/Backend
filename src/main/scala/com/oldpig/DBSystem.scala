@@ -86,7 +86,7 @@ class DBSystem extends Actor with ActorLogging {
 	def insert(coll: String, content: MongoDBObject): String = {
 		val result = db(coll).insert(content)
 		println("insert " + result.getN)
-		"Create %d documents".format(result.getN)
+		"Create."
 	}
 
 	def update(coll: String, query: MongoDBObject, up: MongoDBObject): String = {
