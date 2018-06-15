@@ -34,6 +34,6 @@ trait JsonSupport extends SprayJsonSupport {
 	implicit val locationFormat = jsonFormat3(Location)
 	implicit val searchInfo = jsonFormat6(SearchInfo)
 	implicit val itemPostInfoFormat = jsonFormat8(ItemPostInfo)
-
+	implicit val itemDeleteInfoFormat = jsonFormat1(ItemDeleteInfo)
 }
 //#json-support

@@ -187,23 +187,23 @@ trait OldPigRoutes extends JsonSupport {
 		pathPrefix("item") {
 			concat(
 				post {
-					entity(as[ItemPostInfo]) {
+					entity(as[Item]) {
 						it =>
-							val item = (itemSystem ? CreateItem(it)).mapTo[Item]
+							val item = (itemSystem ? CreateItem(it)).mapTo[PatchResult]
 							complete(item)
 					}
 				},
 				patch {
 					entity(as[Item]) {
 						it =>
-							val item = (itemSystem ? PatchItem(it)).mapTo[Item]
+							val item = (itemSystem ? PatchItem(it)).mapTo[PatchResult]
 							complete(item)
 					}
 				},
 				delete {
-					entity(as[Item]) {
+					entity(as[ItemDeleteInfo]) {
 						it =>
-							val item = (itemSystem ? DeleteItem(it)).mapTo[Item]
+							val item = (itemSystem ? DeleteItem(it)).mapTo[PatchResult]
 							complete(item)
 					}
 				}
