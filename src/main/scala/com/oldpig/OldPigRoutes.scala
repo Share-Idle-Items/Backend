@@ -57,7 +57,8 @@ trait OldPigRoutes extends JsonSupport {
 										.mapTo[PatchResult]
 								complete(patchResult)
 							}
-						})
+						}
+					)
 				},
 				pathPrefix("session") {
 					post {
@@ -76,8 +77,9 @@ trait OldPigRoutes extends JsonSupport {
 								GetUserInfo(st)).mapTo[UserInfo]
 							complete(userInfo)
 						}
-//				}
-				})
+					//				}
+				}
+			)
 		}
 	lazy val orderRoutes =
 		pathPrefix("order") {
@@ -114,8 +116,7 @@ trait OldPigRoutes extends JsonSupport {
 					post {
 						entity(as[OrderQueryInfo]) {
 							o =>
-								val orderQueryResult = (orderSystem ? OrderQuery
-								(o)).mapTo[OrderQueryResults]
+								val orderQueryResult = (orderSystem ? OrderQuery(o)).mapTo[OrderQueryResults]
 								complete(orderQueryResult)
 						}
 					}
@@ -217,8 +218,11 @@ trait OldPigRoutes extends JsonSupport {
 			)
 		}
 
-	lazy val oldPigRoutes: Route = concat(userRoutes, orderRoutes, fundRoutes, chatRoutes, searchRoutes, itemRoutes)
-//		fundRoutes, chatRoutes, searchRoutes, itemRoutes, disputeRoutes)
+	lazy val oldPigRoutes: Route = pathPrefix("api") {
+		concat(userRoutes, orderRoutes, fundRoutes, chatRoutes,
+			searchRoutes, itemRoutes)
+	}
+	//		fundRoutes, chatRoutes, searchRoutes, itemRoutes, disputeRoutes)
 
 	// other dependencies that UserRoutes use
 
