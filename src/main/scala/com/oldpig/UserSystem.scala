@@ -58,8 +58,7 @@ class UserSystem extends Actor with ActorLogging {
 
   def login(loginInfo: LoginInfo): PatchResult = {
     val query = MongoDBObject(
-      "username" -> loginInfo.username
-    )
+      "username" -> loginInfo.username)
     val f1 = (dbSystem ? DBSystem.Query("user", query)).mapTo[Array[DBObject]]
     val result = Await.result(f1, Duration.Inf)
     if (result.isEmpty) PatchResult("Fail")
@@ -75,8 +74,7 @@ class UserSystem extends Actor with ActorLogging {
       "phone" -> phone,
       "password" -> pw,
       "credit" -> credit,
-      "image" -> image
-    )
+      "image" -> image)
     val f1 = (dbSystem ? DBSystem.Update("user", query, upd)).mapTo[String]
     PatchResult(Await.result(f1, Duration.Inf))
   }
@@ -110,8 +108,7 @@ class UserSystem extends Actor with ActorLogging {
       "phone" -> r.front_id,
       "id_card" -> r.id_card,
       "image" -> r.image,
-      "credit" -> r.credit
-    )
+      "credit" -> r.credit)
     val f1 = (dbSystem ? DBSystem.Insert("user", content)).mapTo[String]
     val fundContent = MongoDBObject("user" -> r.front_id, "balance" -> 0)
     val f2 = (dbSystem ? DBSystem.Insert("fund", fundContent)).mapTo[String]

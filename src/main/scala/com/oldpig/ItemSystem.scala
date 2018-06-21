@@ -76,8 +76,7 @@ class ItemSystem extends Actor with ActorLogging {
         item.get("endTime").toString.toInt,
         item.get("transfer").toString.toInt,
         Location(locList(0), locList(1), locList(2)),
-        item.get("category").toString
-      )
+        item.get("category").toString)
     }
   }
 
@@ -94,8 +93,7 @@ class ItemSystem extends Actor with ActorLogging {
       "endTime" -> i.endTime,
       "transfer" -> i.transfer,
       "location" -> i.location,
-      "category" -> i.category
-    )
+      "category" -> i.category)
     val f1 = (dbSystem ? DBSystem.Insert("item", content)).mapTo[String]
     PatchResult(Await.result(f1, Duration.Inf))
   }
@@ -113,8 +111,7 @@ class ItemSystem extends Actor with ActorLogging {
       "endTime" -> i.endTime,
       "transfer" -> i.transfer,
       "location" -> i.location,
-      "category" -> i.category
-    )
+      "category" -> i.category)
     val f1 = (dbSystem ? DBSystem.Update("item", query, content)).mapTo[String]
     PatchResult(Await.result(f1, Duration.Inf))
   }

@@ -73,8 +73,7 @@ class OrderSystem extends Actor with ActorLogging {
         i.get("lender").toString,
         i.get("item").toString,
         i.get("time").toString.toInt,
-        i.get("status").toString.toInt
-      )
+        i.get("status").toString.toInt)
     OrderQueryResults(ret)
   }
 
@@ -83,8 +82,7 @@ class OrderSystem extends Actor with ActorLogging {
     val content = $set(
       "state" -> 10,
       "reason" -> o.reason,
-      "deleteTime" -> o.time
-    )
+      "deleteTime" -> o.time)
     val f1 = (dbSystem ? DBSystem.Update("order", query, content)).mapTo[String]
     PatchResult(Await.result(f1, Duration.Inf))
   }
@@ -96,8 +94,7 @@ class OrderSystem extends Actor with ActorLogging {
       "borrower" -> o.borrower,
       "lender" -> o.lender,
       "status" -> o.status,
-      "time" -> o.time
-    )
+      "time" -> o.time)
     val f1 = (dbSystem ? DBSystem.Insert("order", content)).mapTo[String]
     PatchResult(Await.result(f1, Duration.Inf))
   }
@@ -108,8 +105,7 @@ class OrderSystem extends Actor with ActorLogging {
       "item" -> o.item,
       "borrower" -> o.borrower,
       "lender" -> o.lender,
-      "status" -> o.status
-    )
+      "status" -> o.status)
     val f1 = (dbSystem ? DBSystem.Update("order", query, content)).mapTo[String]
     PatchResult(Await.result(f1, Duration.Inf))
   }

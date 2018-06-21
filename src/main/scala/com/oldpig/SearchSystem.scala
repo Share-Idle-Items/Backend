@@ -60,8 +60,7 @@ class SearchSystem extends Actor with ActorLogging {
         item.get("transfer").toString.toInt,
         //				item.as[Location]("location"),
         Location(locList(0), locList(1), locList(2)),
-        item.get("category").toString
-      )
+        item.get("category").toString)
     }
     ItemsList(ret)
   }

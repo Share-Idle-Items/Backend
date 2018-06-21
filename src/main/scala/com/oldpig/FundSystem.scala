@@ -40,8 +40,7 @@ class FundSystem extends Actor with ActorLogging {
     val content = MongoDBObject(
       "user" -> fundChangeInfo.user,
       "amount" -> fundChangeInfo.amount,
-      "time" -> fundChangeInfo.time
-    )
+      "time" -> fundChangeInfo.time)
     val f1 = (dbSystem ? DBSystem.Update("fund", query, inc)).mapTo[String]
     dbSystem ? DBSystem.Insert("fundRecord", content)
     PatchResult(Await.result(f1, Duration.Inf))
@@ -53,8 +52,7 @@ class FundSystem extends Actor with ActorLogging {
     val content = MongoDBObject(
       "user" -> fundChangeInfo.user,
       "amount" -> -fundChangeInfo.amount,
-      "time" -> fundChangeInfo.time
-    )
+      "time" -> fundChangeInfo.time)
     val f1 = (dbSystem ? DBSystem.Update("fund", query, dec)).mapTo[String]
     dbSystem ? DBSystem.Insert("fundRecord", content)
     PatchResult(Await.result(f1, Duration.Inf))
