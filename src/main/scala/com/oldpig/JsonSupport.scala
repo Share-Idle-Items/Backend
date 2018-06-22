@@ -33,7 +33,7 @@ trait JsonSupport extends SprayJsonSupport {
 
   implicit val itemFormat = jsonFormat13(Item)
   implicit val itemsListFormat = jsonFormat1(ItemsList)
-  implicit val searchInfo = jsonFormat6(SearchInfo)
+  implicit val searchInfo = jsonFormat7(SearchInfo)
   //	implicit val itemPostInfoFormat = jsonFormat10(ItemPostInfo)
   implicit val itemDeleteInfoFormat = jsonFormat1(ItemDeleteInfo)
 }
