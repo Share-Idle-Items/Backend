@@ -37,8 +37,8 @@ trait OldPigRoutes extends JsonSupport {
           concat(
             post {
               entity(as[RegisterInfo]) { r =>
-                val userInfo: Future[UserInfo] = (userSystem ?
-                  RegisterUser(r)).mapTo[UserInfo]
+                val userInfo: Future[RegisterInfo] = (userSystem ?
+                  RegisterUser(r)).mapTo[RegisterInfo]
                 complete(userInfo)
               }
             },
