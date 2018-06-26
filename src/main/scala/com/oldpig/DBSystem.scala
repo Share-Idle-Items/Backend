@@ -90,7 +90,7 @@ class DBSystem extends Actor with ActorLogging {
     def insert(coll: String, content: MongoDBObject): String = {
         val result = db(coll).insert(content)
         println("insert " + result.getN)
-        "Create."
+        content.get("_id").get.toString
     }
 
     def update(coll: String, query: MongoDBObject, up: MongoDBObject): String = {
@@ -105,7 +105,7 @@ class DBSystem extends Actor with ActorLogging {
         "Delete %d document(s)".format(result.getN)
     }
 
-    def sample(coll: String, n: Int):Array[DBObject] = {
+    def sample(coll: String, n: Int): Array[DBObject] = {
         val all = db(coll).find()
         if (all.size < n)
             all.toArray

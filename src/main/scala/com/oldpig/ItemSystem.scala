@@ -16,6 +16,10 @@ final case class Item(front_id: String, name: String, description: String, user:
                       deposit: Double, image: List[String], startTime: Int, endTime: Int, transfer: Int,
                       location: Location, category: String, phone: Int)
 
+final case class CreateItemInfo(name: String, description: String, user: String, price: Double,
+                      deposit: Double, image: List[String], startTime: Int, endTime: Int, transfer: Int,
+                      location: Location, category: String, phone: Int)
+
 final case class ItemList(list: List[Item])
 
 //final case class ItemPostInfo(name: String, description: String, user: String, price: Double, deposit: Double,
@@ -27,7 +31,7 @@ final case class ItemDeleteInfo(front_id: String)
 object ItemSystem {
     def props = Props[ItemSystem]
 
-    case class CreateItem(item: Item)
+    case class CreateItem(item: CreateItemInfo)
 
     case class PatchItem(item: Item)
 
@@ -88,9 +92,8 @@ class ItemSystem extends Actor with ActorLogging {
         }
     }
 
-    def createItem(i: Item): PatchResult = {
+    def createItem(i: CreateItemInfo): PatchResult = {
         val content = MongoDBObject(
-            "front_id" -> i.front_id,
             "name" -> i.name,
             "description" -> i.description,
             "user" -> i.user,

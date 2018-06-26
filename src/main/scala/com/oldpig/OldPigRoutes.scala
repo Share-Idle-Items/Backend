@@ -182,7 +182,7 @@ trait OldPigRoutes extends JsonSupport {
         pathPrefix("item") {
             concat(
                 post {
-                    entity(as[Item]) {
+                    entity(as[CreateItemInfo]) {
                         it =>
                             val item = (itemSystem ? CreateItem(it)).mapTo[PatchResult]
                             complete(item)
