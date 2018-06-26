@@ -11,8 +11,6 @@ import scala.concurrent.duration.{Duration, _}
 final case class SearchInfo(user: String, name: String, startTime: Int, endTime: Int, category: String,
                             lowPrice: Double, highPrice: Double)
 
-final case class ItemsList(list: List[Item])
-
 object SearchSystem {
     def props = Props[SearchSystem]
 
@@ -32,7 +30,7 @@ class SearchSystem extends Actor with ActorLogging {
             sender() ! search(searchInfo)
     }
 
-    def search(i: SearchInfo): ItemsList = {
+    def search(i: SearchInfo): ItemList = {
         var query = ("startTime" $gte i.startTime) ++ ("endTime" $lte i.endTime) ++
             ("price" $gte i.lowPrice $lte i.endTime)
         if (!i.category.isEmpty) query = query ++ ("category" $eq i.category)
@@ -65,6 +63,6 @@ class SearchSystem extends Actor with ActorLogging {
                 item.get("phone").toString.toInt
             )
         }
-        ItemsList(ret)
+        ItemList(ret)
     }
 }

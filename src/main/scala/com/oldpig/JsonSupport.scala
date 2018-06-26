@@ -32,9 +32,9 @@ trait JsonSupport extends SprayJsonSupport {
   implicit val chatRecordsFormat = jsonFormat1(ChatRecords)
 
   implicit val itemFormat = jsonFormat13(Item)
-  implicit val itemsListFormat = jsonFormat1(ItemsList)
   implicit val searchInfo = jsonFormat7(SearchInfo)
   //	implicit val itemPostInfoFormat = jsonFormat10(ItemPostInfo)
   implicit val itemDeleteInfoFormat = jsonFormat1(ItemDeleteInfo)
+  implicit val itemListFormat = jsonFormat1(ItemList)
 }
 //#json-support

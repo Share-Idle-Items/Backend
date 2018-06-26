@@ -121,7 +121,7 @@ class UserSystem extends Actor with ActorLogging {
             "id_card" -> "",
             "image" -> "",
             "credit" -> 0,
-            "location" -> Location("","","")
+            "location" -> Location("", "", "")
         )
         val f1 = (dbSystem ? DBSystem.Insert("user", content)).mapTo[String]
         val fundContent = MongoDBObject("user" -> r.front_id, "balance" -> 0)
