@@ -14,11 +14,11 @@ final case class Location(province: String, city: String, region: String)
 
 final case class Item(front_id: String, name: String, description: String, user: String, price: Double,
                       deposit: Double, image: List[String], startTime: Int, endTime: Int, transfer: Int,
-                      location: Location, category: String, phone: Int)
+                      location: Location, category: String, phone: String)
 
 final case class CreateItemInfo(name: String, description: String, user: String, price: Double,
                       deposit: Double, image: List[String], startTime: Int, endTime: Int, transfer: Int,
-                      location: Location, category: String, phone: Int)
+                      location: Location, category: String, phone: String)
 
 final case class ItemList(list: List[Item])
 
@@ -67,7 +67,7 @@ class ItemSystem extends Actor with ActorLogging {
         val f1 = (dbSystem ? DBSystem.Query("item", query)).mapTo[Array[DBObject]]
         val result = Await.result(f1, Duration.Inf)
         if (result.isEmpty) Item("null", "null", "null", "null", 0, 0, List("null"),
-            0, 0, 0, Location("null", "null", "null"), "null", 0)
+            0, 0, 0, Location("null", "null", "null"), "null", "0")
         else {
             val item = result(0)
             val locList = (List() ++ item("location").asInstanceOf[BasicDBList]) map {
@@ -88,7 +88,7 @@ class ItemSystem extends Actor with ActorLogging {
                 item.get("transfer").toString.toInt,
                 Location(locList(0), locList(1), locList(2)),
                 item.get("category").toString,
-                item.get("phone").toString.toInt)
+                item.get("phone").toString)
         }
     }
 
@@ -160,7 +160,7 @@ class ItemSystem extends Actor with ActorLogging {
                 //				item.as[Location]("location"),
                 Location(locList(0), locList(1), locList(2)),
                 item.get("category").toString,
-                item.get("phone").toString.toInt
+                item.get("phone").toString
             )
         }
         ItemList(list)
