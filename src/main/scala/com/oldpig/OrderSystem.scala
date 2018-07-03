@@ -8,6 +8,7 @@ import com.mongodb.casbah.query.Imports._
 
 import scala.concurrent.Await
 import scala.concurrent.duration.{ Duration, _ }
+import org.bson.types.ObjectId
 
 final case class OrderInfo(front_id: String, borrower: String, lender: String, item: String, time: Int,
   status: Int)
@@ -68,7 +69,7 @@ class OrderSystem extends Actor with ActorLogging {
     var ret = List[OrderQueryResult]()
     for (i <- result)
       ret ::= OrderQueryResult(
-        i.get("front_id").toString,
+        i.get("_id").toString,
         i.get("borrower").toString,
         i.get("lender").toString,
         i.get("item").toString,
@@ -78,7 +79,7 @@ class OrderSystem extends Actor with ActorLogging {
   }
 
   def cancelOrder(o: OrderDeleteInfo): PatchResult = {
-    val query = MongoDBObject("front_id" -> o.front_id)
+    val query = MongoDBObject("_id" -> new ObjectId(o.front_id))
     val content = $set(
       "state" -> 10,
       "reason" -> o.reason,
@@ -89,7 +90,6 @@ class OrderSystem extends Actor with ActorLogging {
 
   def createOrder(o: OrderInfo): PatchResult = {
     val content = MongoDBObject(
-      "front_id" -> o.front_id,
       "item" -> o.item,
       "borrower" -> o.borrower,
       "lender" -> o.lender,
@@ -100,7 +100,7 @@ class OrderSystem extends Actor with ActorLogging {
   }
 
   def patchOrder(o: OrderInfo): PatchResult = {
-    val query = MongoDBObject("front_id" -> o.front_id)
+    val query = MongoDBObject("_id" -> new ObjectId(o.front_id))
     val content = $set(
       "item" -> o.item,
       "borrower" -> o.borrower,
