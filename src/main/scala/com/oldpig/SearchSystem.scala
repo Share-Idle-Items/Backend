@@ -31,8 +31,8 @@ class SearchSystem extends Actor with ActorLogging {
   }
 
   def search(i: SearchInfo): ItemList = {
-    var query = ("startTime" $gte i.startTime) ++ ("endTime" $lte i.endTime) ++
-      ("price" $gte i.lowPrice $lte i.endTime)
+    var query = ("startTime" $lte i.startTime) ++ ("endTime" $gte i.endTime) ++
+      ("price" $gte i.lowPrice $lte i.highPrice)
     if (!i.category.isEmpty) query = query ++ ("category" $eq i.category)
     if (!i.user.isEmpty) query = query ++ ("user" $eq i.user)
     if (!i.name.isEmpty) query = query ++ ("name" $eq i.name)
@@ -44,7 +44,7 @@ class SearchSystem extends Actor with ActorLogging {
         _.asInstanceOf[String]
       }
       ret ::= Item(
-        item("front_id").toString,
+        item("_id").toString,
         item.get("name").toString,
         item.get("description").toString,
         item.get("user").toString,
